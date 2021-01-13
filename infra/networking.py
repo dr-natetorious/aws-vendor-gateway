@@ -10,9 +10,15 @@ class BaseNetworkingLayer(core.Construct):
   """
   def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
     super().__init__(scope, id, **kwargs)
+    self.create_networking()
 
+  @property
+  def vendor_a_vpc(self) -> ec2.IVpc:
+    return self.__vendor_a_vpc
+
+  def create_networking(self):
     # Create Vendors...
-    self.vendor_a_vpc = ec2.Vpc(self,'VendorA', cidr='10.10.0.0/16',
+    self.__vendor_a_vpc = ec2.Vpc(self,'VendorA', cidr='10.10.0.0/16',
       enable_dns_hostnames=True,
       enable_dns_support=True,
       max_azs=3,
