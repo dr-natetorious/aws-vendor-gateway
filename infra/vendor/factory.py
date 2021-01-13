@@ -1,6 +1,6 @@
 from infra.vendor.apps import AppConstruct
 from infra.vendor.networking import VendorNetworking
-from infra.shared.ssm import SystemsManagerEndpoints
+from infra.shared.vpce import VpcEndpointsForIsolatedSubnets
 
 from aws_cdk.core import Construct
 
@@ -10,4 +10,5 @@ class VendorFactory(Construct):
     super().__init__(scope, id, **kwargs)
 
     self.networking = VendorNetworking(self,'Networking',cidr=cidr)
-    SystemsManagerEndpoints(self,'SysMgr',vpc=self.networking.vpc)
+    VpcEndpointsForIsolatedSubnets(self,'VPC-e',vpc=self.networking.vpc)
+    AppConstruct(self,'AppTier',vpc=self.networking.vpc)

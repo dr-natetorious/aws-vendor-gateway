@@ -6,17 +6,17 @@ from aws_cdk import (
   core
 )
 
-class SystemsManagerEndpoints(core.Construct):
+class VpcEndpointsForIsolatedSubnets(core.Construct):
   """
   Configure the Vendor Application
   """
   def __init__(self, scope: core.Construct, id: str, vpc:ec2.IVpc, **kwargs) -> None:
     super().__init__(scope, id, **kwargs)
 
-    self.security_group = ec2.SecurityGroup(self,'SSM-EndpointSecurity',
+    self.security_group = ec2.SecurityGroup(self,'EndpointSecurity',
       vpc=vpc,
       allow_all_outbound=True,
-      description='SG for SSM Vpc Endpoints')
+      description='SG for AWS Resources in isolated subnet')
 
     self.security_group.add_ingress_rule(
       peer= ec2.Peer.any_ipv4(),
