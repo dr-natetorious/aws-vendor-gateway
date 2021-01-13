@@ -8,7 +8,7 @@ from aws_cdk import (
 
 class VendorConstruct(core.Construct):
   """
-  Configure and deploy the network
+  Configure the Vendor Application
   """
   def __init__(self, scope: core.Construct, id: str, vpc:ec2.IVpc, **kwargs) -> None:
     super().__init__(scope, id, **kwargs)
@@ -53,7 +53,7 @@ class VendorConstruct(core.Construct):
         machine_image=machine_image,
         vpc_subnets=ec2.SubnetSelection(subnets=[subnet]),
         security_group=self.security_group,
-        user_data_causes_replacement=True)
+        user_data_causes_replacement=False)
       
       instance.role.add_managed_policy(
         policy= iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMManagedInstanceCore'))
