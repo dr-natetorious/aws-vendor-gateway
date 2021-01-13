@@ -25,15 +25,15 @@ class VpcEndpointsForIsolatedSubnets(core.Construct):
         string_representation='Any source'))
 
     self.gateways = {}
-    for svc in ['s3']:
-      self.gateways[svc] = ec2.GatewayVpcEndpoint(self,'VPCe-'+svc,
+    for svc in ['s3','dynamodb']:
+      self.gateways[svc] = ec2.GatewayVpcEndpoint(self,svc,
       vpc=vpc,
       service= ec2.GatewayVpcEndpointAwsService(
         name=svc))
 
     self.interfaces = {}
-    for svc in ['ssm','ec2messages','ec2','ssmmessages','kms']:
-      self.interfaces[svc] = ec2.InterfaceVpcEndpoint(self,'VPCe-'+svc,
+    for svc in ['ssm','ec2messages','ec2','ssmmessages','kms','elasticloadbalancing','elasticfilesystem','lambda']:
+      self.interfaces[svc] = ec2.InterfaceVpcEndpoint(self,svc,
       vpc=vpc,
       service= ec2.InterfaceVpcEndpointAwsService(
         name=svc),
