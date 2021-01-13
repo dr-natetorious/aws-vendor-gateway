@@ -6,7 +6,7 @@ from aws_cdk import (
   core
 )
 
-class SystemsManagerConstruct(core.Construct):
+class SystemsManagerEndpoints(core.Construct):
   """
   Configure the Vendor Application
   """

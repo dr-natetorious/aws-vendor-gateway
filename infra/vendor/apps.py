@@ -6,7 +6,7 @@ from aws_cdk import (
   core
 )
 
-class VendorConstruct(core.Construct):
+class AppConstruct(core.Construct):
   """
   Configure the Vendor Application
   """
