@@ -14,7 +14,7 @@ class VendorNetworking(core.Construct):
     self.__vpc = ec2.Vpc(self,'Vpc', cidr=cidr,
       enable_dns_hostnames=True,
       enable_dns_support=True,
-      max_azs=3,
+      max_azs=2,
       subnet_configuration= [
         ec2.SubnetConfiguration(name='Services',subnet_type= ec2.SubnetType.ISOLATED, cidr_mask=24),
       ])
