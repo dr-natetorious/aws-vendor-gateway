@@ -24,6 +24,11 @@ class AppConstruct(core.Construct):
       vpc=vpc,
       allow_all_outbound=True,
       description='Instances within {} VPC'.format(id))    
+
+    self.security_group.add_ingress_rule(
+      peer=ec2.Peer.any_ipv4(),
+      connection=ec2.Port.tcp(80),
+      description='Allow any inbound http traffic')
     
     # Create the EC2 Instances
     machine_image = ec2.MachineImage().generic_linux(
@@ -50,26 +55,23 @@ class AppConstruct(core.Construct):
       instances.append(t.InstanceTarget(instance=instance, port=80))
 
     # Create the load balancer
-    self.load_balancer = elb.ApplicationLoadBalancer(self,'LoadBalancer',
+    self.load_balancer = elb.NetworkLoadBalancer(self,'NetLoadBalancer',
+      cross_zone_enabled=True,
       vpc=vpc,
       deletion_protection=False,
-      ip_address_type= elb.IpAddressType.IPV4,
-      security_group=self.security_group,
       internet_facing=False,
       vpc_subnets= ec2.SubnetSelection(subnet_group_name='Services'))
-
-    self.target_group = elb.ApplicationTargetGroup(self,'TargetGroup',
+    
+    self.target_group = elb.NetworkTargetGroup(self,'NetTargetGroup',
       port=80,
       vpc=vpc,
-      protocol=elb.ApplicationProtocol.HTTP,
+      protocol=elb.Protocol.TCP,
       targets= instances,
-      health_check=elb.HealthCheck(
-        enabled=True,
-        path='/'))
+      health_check=elb.HealthCheck(enabled=True,port="80"))
 
-    self.listener = elb.ApplicationListener(self,'Listener',
+    self.listener = elb.NetworkListener(self,'NetListener',
       load_balancer=self.load_balancer,
-      default_action= elb.ListenerAction.forward(
+      default_action= elb.NetworkListenerAction.forward(
         target_groups=[self.target_group]),
-      protocol= elb.Protocol.HTTP,
+      protocol= elb.Protocol.TCP,
       port=80)
